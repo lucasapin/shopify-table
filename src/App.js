@@ -5,13 +5,23 @@ import ChartOne from "./Components/ChartOne";
 import _ from "lodash";
 // import OrdersTable from "./Components/OrdersTable";
 import moment from "moment";
+
 // const timezone = require("moment-timezone");
 
 function App() {
   const [orders, setOrders] = useState([]);
   const [groupedOrders, setGroupedOrders] = useState([]);
+  const [selectedOrders, setSelectedOrders] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
 
-  console.log(groupedOrders);
+  const filterByDay = (day, arr) => {
+    const filteredGroups = arr.filter((elem) =>
+      moment(elem.date).isSame(day, "day")
+    );
+    setSelectedOrders(filteredGroups);
+  };
+
+  console.log("selected orders", selectedOrders);
 
   // API Call to the /request endpoint - Retrieve all the orders
   useEffect(() => {
@@ -31,7 +41,7 @@ function App() {
 
   useEffect(() => {
     const sorted = _.groupBy(orders, function (order) {
-      return moment(order.updated_at).startOf("day").format();
+      return moment(order.updated_at).startOf("hour").format();
     });
 
     // Reduce each array to its total
@@ -100,7 +110,21 @@ function App() {
           </table>
         </div>
         <div className="col-md-6">
-          <ChartOne groupedTransactions={groupedOrders} />
+          <label for="days">Choose a day:</label>
+          <select
+            name="days"
+            id="days"
+            style={{ "margin-left": "10px" }}
+            onChange={(e) => {
+              setSelectedDate(e.target.value);
+              filterByDay(e.target.value, groupedOrders);
+            }}
+          >
+            {groupedOrders.map((elem) => (
+              <option value={elem.date}>{elem.date}</option>
+            ))}
+          </select>
+          <ChartOne groupedTransactions={selectedOrders} />
         </div>
       </div>
     </div>

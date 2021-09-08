@@ -1,30 +1,61 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
-import moment from "moment";
+import { daysToWeeks, format } from "date-fns";
+import { filter } from "lodash";
 
 function ChartsPage(props) {
   const [state, setState] = useState({});
 
+  // Set State with Graphs label and data
   useEffect(() => {
     const dates = [];
+    // Format and dettach the transaction dates
     props.groupedTransactions.map((transaction) => {
-      dates.push(transaction.date);
-      console.log(dates);
+      dates.push(format(new Date(transaction.date), "HH:mm"));
       return dates;
     });
     const values = [];
+    // Extract the hourly transaction values for the days
     props.groupedTransactions.map((transaction) => {
       values.push(transaction.value);
       return values;
     });
+    //date-fns format by "H" === 0 | 1 | 23
 
+    // Re-assign Labels and Data
     setState({
       dataLine: {
-        labels: [...dates],
+        labels: [
+          ...dates,
+          // "00:00",
+          // "01:00",
+          // "02:00",
+          // "03:00",
+          // "04:00",
+          // "05:00",
+          // "06:00",
+          // "07:00",
+          // "08:00",
+          // "09:00",
+          // "10:00",
+          // "11:00",
+          // "12:00",
+          // "13:00",
+          // "14:00",
+          // "15:00",
+          // "16:00",
+          // "17:00",
+          // "18:00",
+          // "19:00",
+          // "20:00",
+          // "21:00",
+          // "22:00",
+          // "23:00",
+        ],
         datasets: [
           {
-            label: "Total Transaction Value per Day",
+            label: "Total Transaction Value per hour",
             fill: false,
             lineTension: 0.3,
             backgroundColor: "rgba(225, 204,230, .3)",
@@ -42,42 +73,21 @@ function ChartsPage(props) {
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data: [...values],
+            data: [
+              ...values,
+              // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              // 0, 0,
+            ],
           },
-          // {
-          //   label: "My Second dataset",
-          //   fill: true,
-          //   lineTension: 0.3,
-          //   backgroundColor: "rgba(184, 185, 210, .3)",
-          //   borderColor: "rgb(35, 26, 136)",
-          //   borderCapStyle: "butt",
-          //   borderDash: [],
-          //   borderDashOffset: 0.0,
-          //   borderJoinStyle: "miter",
-          //   pointBorderColor: "rgb(35, 26, 136)",
-          //   pointBackgroundColor: "rgb(255, 255, 255)",
-          //   pointBorderWidth: 10,
-          //   pointHoverRadius: 5,
-          //   pointHoverBackgroundColor: "rgb(0, 0, 0)",
-          //   pointHoverBorderColor: "rgba(220, 220, 220, 1)",
-          //   pointHoverBorderWidth: 2,
-          //   pointRadius: 1,
-          //   pointHitRadius: 10,
-          //   data: [28, 48, 40, 19, 86, 27, 90],
-          // },
         ],
       },
     });
   }, [props.groupedTransactions]);
 
-  // const {date} = this.props.groupedTransactions["date"]
-  // Pass down the sorted Array
-
-  // Labels ...spread each date
-  // data ...spread each value
   return (
     <MDBContainer>
-      <h3 className="mt-5">Line chart</h3>
+      <h4 className="mt-5">Sales per hour</h4>
+
       <Line data={state.dataLine} options={{ responsive: true }} />
     </MDBContainer>
   );
