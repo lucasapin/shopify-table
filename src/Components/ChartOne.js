@@ -6,14 +6,55 @@ import { filter } from "lodash";
 
 function ChartsPage(props) {
   const [state, setState] = useState({});
-
   // Set State with Graphs label and data
   useEffect(() => {
-    const dates = [];
+    const transactionsData = props.groupedTransactions;
+
+    const labelsData = [
+      "00:00",
+      "01:00",
+      "02:00",
+      "03:00",
+      "04:00",
+      "05:00",
+      "06:00",
+      "07:00",
+      "08:00",
+      "09:00",
+      "10:00",
+      "11:00",
+      "12:00",
+      "13:00",
+      "14:00",
+      "15:00",
+      "16:00",
+      "17:00",
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00",
+      "22:00",
+      "23:00",
+    ];
+
+    const valuesData = [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ];
+
+    transactionsData.map((transaction) => {
+      let i = 0;
+      for (i; i < labelsData.length; i++) {
+        if (labelsData[i] === format(new Date(transaction.date), "HH:00")) {
+          console.log("transaction value", transaction.value);
+          valuesData[i] = transaction.value;
+        }
+      }
+    });
+    const hours = [];
     // Format and dettach the transaction dates
     props.groupedTransactions.map((transaction) => {
-      dates.push(format(new Date(transaction.date), "HH:mm"));
-      return dates;
+      hours.push(format(new Date(transaction.date), "HH:mm"));
+      return hours;
     });
     const values = [];
     // Extract the hourly transaction values for the days
@@ -27,31 +68,8 @@ function ChartsPage(props) {
     setState({
       dataLine: {
         labels: [
-          ...dates,
-          // "00:00",
-          // "01:00",
-          // "02:00",
-          // "03:00",
-          // "04:00",
-          // "05:00",
-          // "06:00",
-          // "07:00",
-          // "08:00",
-          // "09:00",
-          // "10:00",
-          // "11:00",
-          // "12:00",
-          // "13:00",
-          // "14:00",
-          // "15:00",
-          // "16:00",
-          // "17:00",
-          // "18:00",
-          // "19:00",
-          // "20:00",
-          // "21:00",
-          // "22:00",
-          // "23:00",
+          // ...hours,
+          ...labelsData,
         ],
         datasets: [
           {
@@ -74,9 +92,8 @@ function ChartsPage(props) {
             pointRadius: 1,
             pointHitRadius: 10,
             data: [
-              ...values,
-              // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              // 0, 0,
+              // ...values,
+              ...valuesData,
             ],
           },
         ],

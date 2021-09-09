@@ -5,6 +5,7 @@ import ChartOne from "./Components/ChartOne";
 import _ from "lodash";
 // import OrdersTable from "./Components/OrdersTable";
 import moment from "moment";
+import { format } from "date-fns";
 
 // const timezone = require("moment-timezone");
 
@@ -21,7 +22,22 @@ function App() {
     setSelectedOrders(filteredGroups);
   };
 
-  console.log("selected orders", selectedOrders);
+  const daysToBeDisplayed = [];
+  const daysToDispose = [];
+  const groupByDay = groupedOrders.map((elem) => {
+    if (daysToBeDisplayed.includes(format(new Date(elem.date), "MM/dd/yyyy"))) {
+      daysToDispose.push(format(new Date(elem.date), "MM/dd/yyyy"));
+    } else {
+      daysToBeDisplayed.push(format(new Date(elem.date), "MM/dd/yyyy"));
+    }
+    // return <option value={elem.date}>{daysToBeDisplayed}</option>;
+    return daysToBeDisplayed;
+    // format(new Date(transaction.date), "MM/dd/yyyy HH:mm")
+  });
+
+  const displayDates = daysToBeDisplayed.map((day) => {
+    return <option value={day}>{day}</option>;
+  });
 
   // API Call to the /request endpoint - Retrieve all the orders
   useEffect(() => {
@@ -114,15 +130,13 @@ function App() {
           <select
             name="days"
             id="days"
-            style={{ "margin-left": "10px" }}
+            style={{ marginLeft: "10px" }}
             onChange={(e) => {
               setSelectedDate(e.target.value);
               filterByDay(e.target.value, groupedOrders);
             }}
           >
-            {groupedOrders.map((elem) => (
-              <option value={elem.date}>{elem.date}</option>
-            ))}
+            {displayDates}
           </select>
           <ChartOne groupedTransactions={selectedOrders} />
         </div>
