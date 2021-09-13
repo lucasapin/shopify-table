@@ -15,30 +15,26 @@ function App() {
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [kaiduData, setKaiduData] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  console.log("Kaidu Data", kaiduData);
 
   // API Call to the /request endpoint - Retrieve all the orders
   useEffect(() => {
+    setLoading(true);
     const ordersAPI = "http://localhost:8000/request";
-    const kaiduAPI =
-      "https://kaidu-dev1.deeppixel.ai/globalData?customer=Safetrack&building=Devesh+home&endDate=2021-09-10T00:00:00-04:00";
+
     const getOrders = axios.get(ordersAPI);
-    const getKaiduData = axios.get(kaiduAPI);
-    axios.all([getOrders, getKaiduData]).then(
+
+    axios.all([getOrders]).then(
       axios.spread((...allData) => {
         const allDataOrders = _.orderBy(
           allData[0].data.orders,
           ["updated_at"],
           ["asc"]
         );
-        // const allDataKaidu = _.orderBy(
-        //   allData[1].data.graph.data,
-        //   ["date"],
-        //   ["asc"]
-        // );
-        const allDataKaidu = allData[1].data.graph.data;
 
-        setKaiduData(allDataKaidu);
         setOrders(allDataOrders);
+        setLoading(false);
       })
     );
   }, []);
@@ -51,6 +47,7 @@ function App() {
   };
 
   const getKaiduByDate = (date) => {
+    setLoading(true);
     const formattedDate = format(new Date(date), "yyyy-MM-dd");
     const kaiduAPI = `https://kaidu-dev1.deeppixel.ai/globalData?customer=Safetrack&building=Devesh+home&endDate=${formattedDate}T00:00:00-04:00`;
     const getKaiduData = axios.get(kaiduAPI);
@@ -60,6 +57,7 @@ function App() {
         const allDataKaidu = allData[0].data.graph.data;
 
         setKaiduData(allDataKaidu);
+        setLoading(false);
       })
     );
   };
@@ -146,10 +144,14 @@ function App() {
             <option value="Date">Date</option>
             {displayDates}
           </select>
-          <ChartOne
-            groupedTransactions={selectedOrders}
-            KaiduCount={kaiduData}
-          />
+          {!isLoading ? (
+            <ChartOne
+              groupedTransactions={selectedOrders}
+              KaiduCount={kaiduData}
+            />
+          ) : (
+            "Loading"
+          )}
         </div>
       </div>
     </div>

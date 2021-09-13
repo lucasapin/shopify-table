@@ -59,10 +59,8 @@ function ChartsPage(props) {
     });
 
     kaiduTrafficCount.map((count) => {
-      let i = 0;
-      for (i; i < labelsData.length; i++) {
-        if (labelsData[i] === format(new Date(count.date), "HH:00")) {
-          console.log("COUNT.VALUE", count.wifi);
+      for (let i = 0; i < labelsData.length; i++) {
+        if (labelsData[i] === format(new Date(count.date), "HH:mm")) {
           kaiduWifiData[i] = count.wifi;
         }
       }
@@ -100,7 +98,7 @@ function ChartsPage(props) {
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: "miter",
-            pointBorderColor: "yellow",
+            pointBorderColor: "lightgray",
             pointBackgroundColor: "rgb(255, 255, 255)",
             pointBorderWidth: 10,
             pointHoverRadius: 5,
@@ -116,7 +114,7 @@ function ChartsPage(props) {
           },
           {
             label: "Total Traffic",
-            fill: true,
+            fill: false,
             lineTension: 0.3,
             backgroundColor: "rgba(184, 185, 210, .3)",
             borderColor: "rgb(35, 26, 136)",
