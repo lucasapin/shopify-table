@@ -3,13 +3,17 @@ import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import { daysToWeeks, format } from "date-fns";
 import { filter } from "lodash";
+import moment from "moment";
+import _ from "lodash";
 
 function ChartsPage(props) {
   const [state, setState] = useState({});
+
   // Set State with Graphs label and data
   useEffect(() => {
     const transactionsData = props.groupedTransactions;
-
+    const kaiduTrafficCount = props.KaiduCount;
+    console.log("KAIDU TRAFFIC COUNT", kaiduTrafficCount);
     const labelsData = [
       "00:00",
       "01:00",
@@ -41,27 +45,41 @@ function ChartsPage(props) {
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ];
 
+    const kaiduWifiData = [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ];
+
     transactionsData.map((transaction) => {
       let i = 0;
       for (i; i < labelsData.length; i++) {
         if (labelsData[i] === format(new Date(transaction.date), "HH:00")) {
-          console.log("transaction value", transaction.value);
           valuesData[i] = transaction.value;
         }
       }
     });
-    const hours = [];
-    // Format and dettach the transaction dates
-    props.groupedTransactions.map((transaction) => {
-      hours.push(format(new Date(transaction.date), "HH:mm"));
-      return hours;
+
+    kaiduTrafficCount.map((count) => {
+      let i = 0;
+      for (i; i < labelsData.length; i++) {
+        if (labelsData[i] === format(new Date(count.date), "HH:00")) {
+          console.log("COUNT.VALUE", count.wifi);
+          kaiduWifiData[i] = count.wifi;
+        }
+      }
     });
-    const values = [];
-    // Extract the hourly transaction values for the days
-    props.groupedTransactions.map((transaction) => {
-      values.push(transaction.value);
-      return values;
-    });
+
+    // const hours = [];
+    // // Format and dettach the transaction dates
+    // props.groupedTransactions.map((transaction) => {
+    //   hours.push(format(new Date(transaction.date), "HH:mm"));
+    //   return hours;
+    // });
+    // const values = [];
+    // // Extract the hourly transaction values for the days
+    // props.groupedTransactions.map((transaction) => {
+    //   values.push(transaction.value);
+    //   return values;
+    // });
     //date-fns format by "H" === 0 | 1 | 23
 
     // Re-assign Labels and Data
@@ -82,7 +100,7 @@ function ChartsPage(props) {
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: "miter",
-            pointBorderColor: "rgb(205, 130,1 58)",
+            pointBorderColor: "yellow",
             pointBackgroundColor: "rgb(255, 255, 255)",
             pointBorderWidth: 10,
             pointHoverRadius: 5,
@@ -96,6 +114,27 @@ function ChartsPage(props) {
               ...valuesData,
             ],
           },
+          {
+            label: "Total Traffic",
+            fill: true,
+            lineTension: 0.3,
+            backgroundColor: "rgba(184, 185, 210, .3)",
+            borderColor: "rgb(35, 26, 136)",
+            borderCapStyle: "butt",
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: "miter",
+            pointBorderColor: "rgb(35, 26, 136)",
+            pointBackgroundColor: "rgb(255, 255, 255)",
+            pointBorderWidth: 10,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgb(0, 0, 0)",
+            pointHoverBorderColor: "rgba(220, 220, 220, 1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: [...kaiduWifiData],
+          },
         ],
       },
     });
@@ -104,7 +143,6 @@ function ChartsPage(props) {
   return (
     <MDBContainer>
       <h4 className="mt-5">Sales per hour</h4>
-
       <Line data={state.dataLine} options={{ responsive: true }} />
     </MDBContainer>
   );
