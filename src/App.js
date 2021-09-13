@@ -150,7 +150,13 @@ function App() {
               KaiduCount={kaiduData}
             />
           ) : (
-            "Loading"
+            <>
+              <br />
+              <br />
+              <br />
+              <br />
+              <h4 style={{ textAlign: "center" }}>...Loading</h4>
+            </>
           )}
         </div>
       </div>
