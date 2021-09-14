@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
-import { daysToWeeks, format } from "date-fns";
-import { filter } from "lodash";
-import moment from "moment";
+import { format } from "date-fns";
 import _ from "lodash";
 
 function ChartsPage(props) {
