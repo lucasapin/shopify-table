@@ -2,6 +2,7 @@ import "./App.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import ChartOne from "./Components/ChartOne";
+import ChartTwo from "./Components/ChartTwo";
 import _ from "lodash";
 // import OrdersTable from "./Components/OrdersTable";
 import moment from "moment";
@@ -145,7 +146,7 @@ function App() {
             {displayDates}
           </select>
           {!isLoading ? (
-            <ChartOne
+            <ChartTwo
               groupedTransactions={selectedOrders}
               KaiduCount={kaiduData}
             />

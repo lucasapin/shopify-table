@@ -3,6 +3,7 @@ import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import { format } from "date-fns";
 import _ from "lodash";
+import {} from "react-chartjs-2";
 
 function ChartsPage(props) {
   const [state, setState] = useState({});
