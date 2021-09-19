@@ -73,6 +73,7 @@ const ChartTwo = (props) => {
           borderWidth: 1,
           tension: 0.3,
           yAxisID: "y",
+          type: "bar",
         },
         {
           label: "Total Traffic",
